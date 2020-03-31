@@ -5,6 +5,10 @@ const bddURL= process.env.MONGODB_URI || "mongodb+srv://root:root@cluster0-0vedk
 const client = new MongoClient(bddURL, { useNewUrlParser: true, useUnifiedTopology: true });
 var dbName = 'notes-api'
 
+var bcrypt = require('bcrypt');
+var jwtUtils = require('./utils/jwt.utils');
+
+
 // Parsing
 app.use(express.json())
 
@@ -47,6 +51,99 @@ app.get('/notes', async function (req, res) {
       }
 
 })
+
+
+app.post('/signup', async function(req, res){
+  // Params
+  var UserName = req.body.UserName;
+  var PassWord = req.body.PassWord;
+  var PassWordOk = req.body.PassWordOk;
+
+  //connecion bdd
+  const client = new MongoClient(MONGODB_URI, {userNewUrlParser: true});
+  await client.connect();
+  const db = client.db(dbName);
+  const col = db.collection('users');
+  console.log('Connected\n');
+
+  if (UserName == null || PassWord == null || PassWordOk == null) {
+      return res.status(400).json({'error': 'missing parameters'});
+  }
+
+  await col.findOne({
+      attributes: ['UserName'],
+      where: { UserName: UserName}
+  })
+  .then(function(userFound){
+      if(!userFound) {
+          Sbcrypt.hash(PassWord, 5, function(err, bcryptedPassWord){
+              var newUser = models.User.create({
+                  UserName: UserName,
+                  PassWord: bcryptedPassWord,
+                  PassWordOk: bcryptedPassWord
+              })
+              .then(function(newUser) {
+                  return res.status(201).json({
+                      'userId': newUser.id
+                  })
+              })
+              .catch(function(err) {
+                  return res.status(500).json({ 'error': 'cannot add user'});
+              });                
+          });
+
+      } else {
+          return res.status(409).json({ 'error': 'user already exit'});
+      }
+  })
+  .catch(function(err) {
+      return res.status(500).json({ 'error': 'unable to verify' });
+  })
+
+
+});
+
+
+app.post('/signin', async function(req, res){
+  //Params
+  var UserName = req.body.UserName;
+  var PassWord = req.body.PassWord;
+
+  //connecion bdd
+  const client = new MongoClient(MONGODB_URI, {userNewUrlParser: true});
+  await client.connect();
+  const db = client.db(dbName);
+  const col = db.collection('users');
+  console.log('Connected\n');
+
+  if (UserName == null || PassWord == null){
+      return res.status(400).json({ 'error' : 'missing parameters' });
+  }
+
+  await col.findOne({
+      where: { UserName: UserName}
+  })
+  .then(function(userFound) {
+      if (userFound){
+          bcrypt.compare(PassWord, userFound.PassWord, function(errBycrypt, resBycrypt) {
+              if (resBycrypt) {
+                  return res.status(200).json({
+                      'UserId': userFound.id,
+                      'token': jwtUtils.generateTokenForUser(userFound)
+                  });
+              } else {
+                  return res.status(403).json({ "error": "invalid password"});
+              }
+          });
+
+      } else {
+          return res.status(404).json({ 'error': 'user not exit in DB' });
+      }
+  })
+  .catch(function(err){
+      return res.status(500).json({ 'error': 'unable to verify user' });
+  });
+});
 
 
 
