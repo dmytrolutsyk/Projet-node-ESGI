@@ -3,6 +3,7 @@ var router = express.Router();
 const {MongoClient} = require('../config');
 const {MONGODB_URI} = require('../config');
 const {dbName} = require('../config');
+var bcrypt = require('bcrypt');
 
 router.post('/', async function(req, res){
     // Params
@@ -19,39 +20,38 @@ router.post('/', async function(req, res){
   
     if (UserName == null || PassWord == null || PassWordOk == null) {
         return res.status(400).json({'error': 'missing parameters'});
-    }
-  
-    await col.findOne({
-        attributes: ['UserName'],
-        where: { UserName: UserName}
-    })
-    .then(function(userFound){
-        if(!userFound) {
-            Sbcrypt.hash(PassWord, 5, function(err, bcryptedPassWord){
-                var newUser = models.User.create({
-                    UserName: UserName,
-                    PassWord: bcryptedPassWord,
-                    PassWordOk: bcryptedPassWord
-                })
-                .then(function(newUser) {
-                    return res.status(201).json({
-                        'userId': newUser.id
-                    })
-                })
-                .catch(function(err) {
+    }else if(PassWord.length <= 3) {
+        return res.status(400).json({'error': 'Le mot de passe doit contenir au moins 4 caractères'});
+    }else if(PassWord != PassWordOk) {
+        return res.status(400).json({'error': 'Le mot de passe saisi est différent de la confirmation, veuilliez recommencer'});
+    }else if(UserName.length <= 2 || UserName.length >= 21 ) {
+        return res.status(400).json({'error': 'Votre identifiant doit contenir entre 2 et 20 caractères'});
+    }/*else if(UserName..includes()) {
+        return res.status(400).json({'error': 'identifiant ne doit contenir que des lettres minuscules non accentuées'});
+*/
+    
+    let data = await col.find({}).toArray();
+    console.log(data)
+    if (data.some(data => data.UserName === req.body.UserName)) {
+        return res.status(400).json({ 'error': 'Cet identifiant est déjà associé à un compte'});
+    } else {
+        bcrypt.hash(PassWord, 5, function(err, bcryptedPassWord){
+            let user = {
+                UserName: UserName,
+                PassWord: bcryptedPassWord,
+            };
+            col.insertOne(user, (err, result) => {
+                if (err) {
+                    console.log(err)
                     return res.status(500).json({ 'error': 'cannot add user'});
-                });                
+                } else {
+                    //resolve({ data: { createdId: result.insertedId }, statusCode: 201 });
+                    return res.status(201).json({ 'createdId': result.insertedId })
+                }
             });
-  
-        } else {
-            return res.status(409).json({ 'error': 'user already exit'});
-        }
-    })
-    .catch(function(err) {
-        return res.status(500).json({ 'error': 'unable to verify' });
-    })
-  
-  
-  });
+        });
+
+    }
+    });
 
   module.exports = {router};
