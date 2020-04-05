@@ -5,6 +5,8 @@ var router = express.Router();
 const {MongoClient} = require('../config');
 const {MONGODB_URI} = require('../config');
 const {dbName} = require('../config');
+const {isUsernameValid} = require('../config');
+
 
 router.post('/', async function(req, res){
     //Params
@@ -27,18 +29,20 @@ router.post('/', async function(req, res){
         return res.status(400).json({'error': 'Le mot de passe doit contenir au moins 4 caractères'});
     }else if(UserName.length <= 2 || UserName.length >= 21 ) {
         return res.status(400).json({'error': 'Votre identifiant doit contenir entre 2 et 20 caractères'});
+    }else if(!isUsernameValid(UserName)) {
+        return res.status(400).json({'error': 'identifiant ne doit contenir que des lettres minuscules non accentuées'});
     }
 
     let data = await col.find({}).toArray();
     console.log('req.body.UserName:', req.body.UserName)
-    if (data.some(data => data.UserName === req.body.UserName)) {
+    if (data.some(data => data.username === req.body.UserName)) {
         console.log("ok")
         data.forEach(element => {
-            if(element.UserName === req.body.UserName){
+            if(element.username === req.body.UserName){
                console.log("zebi")
                userFound = req.body.UserName
             //    UserFound = data.UserName;
-               UserPassWord = element.PassWord;
+               UserPassWord = element.password;
                UserId = element._id;
                console.log(UserFound, UserPassWord, UserId)
             }

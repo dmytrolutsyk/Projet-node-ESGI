@@ -4,6 +4,9 @@ const {MongoClient} = require('../config');
 const {MONGODB_URI} = require('../config');
 const {dbName} = require('../config');
 var bcrypt = require('bcrypt');
+const {isUsernameValid} = require('../config');
+var jwtUtils = require('../utils/jwt.utils');
+
 
 router.post('/', async function(req, res){
     // Params
@@ -18,17 +21,17 @@ router.post('/', async function(req, res){
     const col = db.collection('users');
     console.log('Connected\n');
   
-    if (UserName == null || PassWord == null || PassWordOk == null) {
+    if (UserName == null || PassWord == null /*|| PassWordOk == null*/) {
         return res.status(400).json({'error': 'missing parameters'});
     }else if(PassWord.length <= 3) {
         return res.status(400).json({'error': 'Le mot de passe doit contenir au moins 4 caractères'});
     }else if(PassWord != PassWordOk) {
-        return res.status(400).json({'error': 'Le mot de passe saisi est différent de la confirmation, veuilliez recommencer'});
+    //    return res.status(400).json({'error': 'Le mot de passe saisi est différent de la confirmation, veuilliez recommencer'});
     }else if(UserName.length <= 2 || UserName.length >= 21 ) {
         return res.status(400).json({'error': 'Votre identifiant doit contenir entre 2 et 20 caractères'});
-    }/*else if(UserName..includes()) {
+    }else if(!isUsernameValid(UserName)) {
         return res.status(400).json({'error': 'identifiant ne doit contenir que des lettres minuscules non accentuées'});
-*/
+    }
     
     let data = await col.find({}).toArray();
     console.log(data)
@@ -37,8 +40,8 @@ router.post('/', async function(req, res){
     } else {
         bcrypt.hash(PassWord, 5, function(err, bcryptedPassWord){
             let user = {
-                UserName: UserName,
-                PassWord: bcryptedPassWord,
+                username: UserName,
+                password: bcryptedPassWord,
             };
             col.insertOne(user, (err, result) => {
                 if (err) {
@@ -46,7 +49,8 @@ router.post('/', async function(req, res){
                     return res.status(500).json({ 'error': 'cannot add user'});
                 } else {
                     //resolve({ data: { createdId: result.insertedId }, statusCode: 201 });
-                    return res.status(201).json({ 'createdId': result.insertedId })
+                    return res.status(201).json({ 'createdId': result.insertedId,
+                    'token': jwtUtils.generateTokenForUser(UserName) })
                 }
             });
         });
