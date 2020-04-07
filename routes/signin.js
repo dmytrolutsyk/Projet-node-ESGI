@@ -8,11 +8,9 @@ const {dbName} = require('../config');
 
 router.post('/', async function(req, res){
     //Params
-    var UserName = req.body.UserName;
-    var PassWord = req.body.PassWord;
-    var UserFound = null;
-    var UserPassWord = null;
-    var UserId = null;
+    var username = req.body.username;
+    var password = req.body.password;
+    var user = null;
   
     //connecion bdd
     const client = new MongoClient(MONGODB_URI, {userNewUrlParser: true});
@@ -21,33 +19,30 @@ router.post('/', async function(req, res){
     const col = db.collection('users');
     console.log('Connected\n');
 
-    if (UserName == null || PassWord == null){
+    if (username == null || password == null){
         return res.status(400).json({ 'error' : 'missing parameters' });
-    }else if(PassWord.length <= 3) {
+    }else if(password.length <= 3) {
         return res.status(400).json({'error': 'Le mot de passe doit contenir au moins 4 caractères'});
-    }else if(UserName.length <= 2 || UserName.length >= 21 ) {
+    }else if(username.length <= 2 || username.length >= 21 ) {
         return res.status(400).json({'error': 'Votre identifiant doit contenir entre 2 et 20 caractères'});
     }
 
     let data = await col.find({}).toArray();
-    console.log('req.body.UserName:', req.body.UserName)
-    if (data.some(data => data.UserName === req.body.UserName)) {
+    if (data.some(data => data.username === req.body.username)) {
         console.log("ok")
         data.forEach(element => {
-            if(element.UserName === req.body.UserName){
-               console.log("zebi")
-               userFound = req.body.UserName
-            //    UserFound = data.UserName;
-               UserPassWord = element.PassWord;
-               UserId = element._id;
-               console.log(UserFound, UserPassWord, UserId)
+            if(element.username === req.body.username){
+               
+               user = element
+
+               console.log(user)
             }
         });
-        bcrypt.compare(PassWord, UserPassWord, function(errBycrypt, resBycrypt) {
+        bcrypt.compare(password, user.password, function(errBycrypt, resBycrypt) {
             if (resBycrypt) {
                 return res.status(200).json({
-                    'UserId': UserId,
-                    'token': jwtUtils.generateTokenForUser(UserName)
+                    'UserId': user._id,
+                    'token': jwtUtils.generateTokenForUser(user)
                 });
             } else {
                 return res.status(403).json({ "error": "invalid password"});

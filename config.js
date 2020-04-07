@@ -4,7 +4,8 @@ const dbName = process.env.DBNAME || 'notes-api';
 
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
-
+const JWT_SIGN_SECRET ='jfsjdJBDF56JB546J588hjbhjb7HBJ';
+var jwt = require('jsonwebtoken');
 
 function dateNow(){
     var dateNow = new Date();
@@ -26,11 +27,26 @@ function formatDigits(number){
     return number;
 }
 
+function isUsernameValid(str){
+    if(typeof(str)!== 'string'){
+        return false;
+    }
+    for(var i=0;i<str.length;i++){
+        if(str.charCodeAt(i)>122 || str.charCodeAt(i)<97){
+            return false;
+        }
+    }
+    return true;
+} 
+
 module.exports = {
     ObjectId,
     MongoClient,
     MONGODB_URI,
     dbName,
     PORT,
-    dateNow
+    dateNow,
+    JWT_SIGN_SECRET,
+    isUsernameValid,
+    jwt
 };
