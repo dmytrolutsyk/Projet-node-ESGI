@@ -94,38 +94,45 @@ router.put('/', async function(req, res) {
 
 /* Patch A NOTE */
 router.patch('/:id', async function(req, res) {
-
-    const client = new MongoClient(MONGODB_URI, {useNewUrlParser: true});
-    await client.connect();
-    const db = client.db(dbName);
-    const col = db.collection('notes');
-    console.log('Connected\n');
-
-    let content = req.body.content;
-
-    let lastUpdatedAt = dateNow();
-
-    if(content.length === 0){
-        res.status(400).send({error: 'Aucun contenu n\'a été saisi'});
-    } else {
-        const note = await col.findOne({_id: ObjectId(req.params.id)});
-        if (!note){
-            res.status(400).send({error: 'Aucune note n\'a été trouvee'});
+    var token = req.get('Authorization');
+    jwt.verify(token, JWT_SIGN_SECRET, async (err, data) => {
+        if (err) {
+            res.status(401).send('Utilisateur non connecté');
         } else {
-            await col.updateOne(
-                {_id: ObjectId(req.params.id)},
-                {$set: {content: req.body.content, lastUpdatedAt: lastUpdatedAt}}
-            );
-            const newNote = await col.findOne({_id: ObjectId(req.params.id)});
-            res.status(200).send({
-                error: null,
-                note: newNote
-            });
+
+            const client = new MongoClient(MONGODB_URI, {useNewUrlParser: true});
+            await client.connect();
+            const db = client.db(dbName);
+            const col = db.collection('notes');
+            console.log('Connected\n');
+
+            let content = req.body.content;
+
+            let lastUpdatedAt = dateNow();
+
+            if(content.length === 0){
+                res.status(400).send({error: 'Aucun contenu n\'a été saisi'});
+            } else {
+                const note = await col.findOne({_id: ObjectId(req.params.id)});
+                if (!note){
+                    res.status(400).send({error: 'Aucune note n\'a été trouvee'});
+                } else {
+                    await col.updateOne(
+                        {_id: ObjectId(req.params.id)},
+                        {$set: {content: req.body.content, lastUpdatedAt: lastUpdatedAt}}
+                    );
+                    const newNote = await col.findOne({_id: ObjectId(req.params.id)});
+                    res.status(200).send({
+                        error: null,
+                        note: newNote
+                    });
+                }
+            }
+
+            client.close();
+
         }
-    }
-
-    client.close();
-
+    });
 });
 
 module.exports = {router};
