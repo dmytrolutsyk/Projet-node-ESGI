@@ -9,10 +9,17 @@ installer node
 installer npm
 
 # Pour récupérer le projet git : 
-	```$ git clone https://github.com/dmytrolutsyk/Projet-node-ESGI.git```
+```
+	$ git clone https://github.com/dmytrolutsyk/Projet-node-ESGI.git
+```
 
 # Pour installer les dépendances :
-	```$ npm install```
+```
+	$ npm install
+```
 
 # Pour lancer le projet :
-	```$ npm start```
+```
+$ npm start
+```
+
