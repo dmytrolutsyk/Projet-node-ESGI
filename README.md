@@ -32,15 +32,21 @@ Notre projet est une API réalisée en NodeJS communiquant avec une base de donn
 * Route /signin permettant à un utilisateur de se connecter.
 * Route /signup permettant à un utilisateur de s'inscrire.
 * Route /notes permettant de :
+	* Créer une note (put method).
 	* Récupérer toutes les notes (get method) à partir de l'utilisateur (/notes).
 	* Modifier une note (patch method) depuis son ID (/notes/:id).
 	* Supprimer une note (delete method) depuis son ID (/notes/:id).
 
-## Versions
+# Sources
+
+* [Express](https://expressjs.com/en/api.html) - The web framework used
+* [JsonWebToken](https://github.com/auth0/node-jsonwebtoken) - Token authentification
+
+# Versions
 
 Pour les versions disponibles, se référer [tags on this repository](https://github.com/dmytrolutsyk/Projet-node-ESGI/tags).
 
-## Collaborateurs
+# Collaborateurs
 
 * LUTSYK Dmytro
 * DENNOUN Mohamed
