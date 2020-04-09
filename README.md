@@ -29,9 +29,9 @@ Notre projet est une API réalisée en NodeJS communiquant avec une base de donn
 
 # Différentes routes :
 
--Route /signin permettant à un utilisateur de se connecter.
--Route /signup permettant à un utilisateur de s'inscrire.
--Route /notes permettant de :
-	-Récupérer toutes les notes (get method) à partir de l'utilisateur (/notes).
-	-Modifier une note (patch method) depuis son ID (/notes/:id).
-	-Supprimer une note (delete method) depuis son ID (/notes/:id).
+* Route /signin permettant à un utilisateur de se connecter.
+* Route /signup permettant à un utilisateur de s'inscrire.
+* Route /notes permettant de :
+	* Récupérer toutes les notes (get method) à partir de l'utilisateur (/notes).
+	* Modifier une note (patch method) depuis son ID (/notes/:id).
+	* Supprimer une note (delete method) depuis son ID (/notes/:id).
