@@ -29,18 +29,40 @@ Notre projet est une API réalisée en NodeJS communiquant avec une base de donn
 
 # Différentes routes :
 
+Pour chaque route citée un exemple de requête curl sera fournie. Nous partons du principe que l'application est déployée sur Heroku.
+
 * Route /signin permettant à un utilisateur de se connecter.
+	```
+	$ curl -X POST --header "Content-Type: application/json" --data "{\"username\":\"YOUR_USERNAME\", \"password\":\"YOUR_PASSWORD\"}" https://node-projectt.herokuapp.com/signin
+	```
 * Route /signup permettant à un utilisateur de s'inscrire.
+	```
+	$ curl -X POST --header "Content-Type: application/json" --data "{\"username\":\"YOUR_USERNAME\", \"password\":\"YOUR_PASSWORD\"}" https://node-projectt.herokuapp.com/signup
+	```
 * Route /notes permettant de :
 	* Créer une note (put method).
+		```
+		$ curl -X PUT --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" --data "{\"content\":\"Note content\"}" https://node-projectt.herokuapp.com/notes
+		```
 	* Récupérer toutes les notes (get method) à partir de l'utilisateur (/notes).
+		```
+		$ curl -X GET --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" https://node-projectt.herokuapp.com/notes
+		```
 	* Modifier une note (patch method) depuis son ID (/notes/:id).
+		```
+		$ curl -X PATCH --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" --data "{\"content\":\"Note content\"}" https://node-projectt.herokuapp.com/notes/(id_note)
+		```
 	* Supprimer une note (delete method) depuis son ID (/notes/:id).
+		```
+		$ curl -X DELETE --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" https://node-projectt.herokuapp.com//notes/(id_note)
+		```
 
 # Sources
 
-* [Express](https://expressjs.com/en/api.html) - The web framework used
-* [JsonWebToken](https://github.com/auth0/node-jsonwebtoken) - Token authentification
+* [Express](https://expressjs.com/en/api.html) - The web framework used.
+* [JsonWebToken](https://github.com/auth0/node-jsonwebtoken) - Token authentification.
+* [Heroku](https://dashboard.heroku.com/apps) - Deploy.
+* [MongoDB](https://www.mongodb.com) - Database NoSQL.
 
 # Versions
 
