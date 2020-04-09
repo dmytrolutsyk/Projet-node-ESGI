@@ -20,6 +20,6 @@ installer npm
 
 # Pour lancer le projet :
 ```
-$ npm start
+	$ npm start
 ```
 
