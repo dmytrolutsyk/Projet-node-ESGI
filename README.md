@@ -35,3 +35,14 @@ Notre projet est une API réalisée en NodeJS communiquant avec une base de donn
 	* Récupérer toutes les notes (get method) à partir de l'utilisateur (/notes).
 	* Modifier une note (patch method) depuis son ID (/notes/:id).
 	* Supprimer une note (delete method) depuis son ID (/notes/:id).
+
+## Versions
+
+Pour les versions disponibles, se référer [tags on this repository](https://github.com/dmytrolutsyk/Projet-node-ESGI/tags).
+
+## Collaborateurs
+
+* LUTSYK Dmytro
+* DENNOUN Mohamed
+* YU xuanbai
+* GOURGUE Henri
