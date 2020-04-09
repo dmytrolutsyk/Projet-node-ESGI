@@ -72,5 +72,5 @@ Pour les versions disponibles, se référer [tags on this repository](https://gi
 
 * LUTSYK Dmytro.
 * DENNOUN Mohamed.
-* YU xuanbai.
+* YU Xuanbai.
 * GOURGUE Henri.
