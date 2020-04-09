@@ -135,4 +135,50 @@ router.patch('/:id', async function(req, res) {
     });
 });
 
+
+/* Delete A NOTE */
+router.delete('/:id', async function(req, res) {
+    var token = req.get('Authorization');
+    jwt.verify(token, JWT_SIGN_SECRET, async (err, data) => {
+        if (err) {
+            res.status(401).send('Utilisateur non connecté');
+        } else {
+            const client = new MongoClient(MONGODB_URI, {useNewUrlParser: true});
+            try {
+                await client.connect();
+                const db = client.db(dbName);
+                const col = db.collection('notes');
+                //DELETE ONE DOCUMENT
+                let id_note = req.params.id;
+                let noteResults = await col.find().toArray();
+                let resultForEach = 0;
+                console.log("notes",noteResults);
+                let noteToBeDeleted;
+                noteResults.forEach(function (resForEach) {
+                    if(resForEach._id.equals(id_note)){
+                        resultForEach = 1;
+                        noteToBeDeleted = resForEach;
+                    }
+                });
+                if(resultForEach === 0) {
+                    res.status(404).send({error: 'Cet identifiant est inconnu'});
+                } else if(noteToBeDeleted.userID !== data.userId){
+                    res.status(403).send({error: 'Accès non autorisé à cette note'})
+                } else {
+                    await col.deleteOne({_id: noteToBeDeleted._id});
+                    res.send({
+                        error: null
+                    });
+                }
+            } catch (err) {
+                res.send({
+                    error: err
+                });
+            }
+            client.close();
+        }
+    });
+});
+
+
 module.exports = {router};
