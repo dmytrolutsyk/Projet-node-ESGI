@@ -21,7 +21,7 @@ installer npm
 # Pour lancer le projet :
 ```
 	$ npm start
-``
+```
 
 # Principe de l'application :
 
