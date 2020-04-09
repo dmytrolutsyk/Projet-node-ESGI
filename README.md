@@ -10,17 +10,17 @@ installer npm
 
 # Pour récupérer le projet git : 
 ```
-	$ git clone https://github.com/dmytrolutsyk/Projet-node-ESGI.git
+$ git clone https://github.com/dmytrolutsyk/Projet-node-ESGI.git
 ```
 
 # Pour installer les dépendances :
 ```
-	$ npm install
+$ npm install
 ```
 
 # Pour lancer le projet :
 ```
-	$ npm start
+$ npm start
 ```
 
 # Principe de l'application :
@@ -70,7 +70,7 @@ Pour les versions disponibles, se référer [tags on this repository](https://gi
 
 # Collaborateurs
 
-* LUTSYK Dmytro
-* DENNOUN Mohamed
-* YU xuanbai
-* GOURGUE Henri
+* LUTSYK Dmytro.
+* DENNOUN Mohamed.
+* YU xuanbai.
+* GOURGUE Henri.
