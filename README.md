@@ -40,7 +40,7 @@ Pour chaque route citée un exemple de requête curl sera fournie. Nous partons 
 	$ curl -X POST --header "Content-Type: application/json" --data "{\"username\":\"YOUR_USERNAME\", \"password\":\"YOUR_PASSWORD\"}" https://node-projectt.herokuapp.com/signup
 	```
 * Route /notes permettant de :
-	* Créer une note (put method).
+	* Créer une note (put method, /notes).
 		```
 		$ curl -X PUT --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" --data "{\"content\":\"Note content\"}" https://node-projectt.herokuapp.com/notes
 		```
@@ -48,13 +48,13 @@ Pour chaque route citée un exemple de requête curl sera fournie. Nous partons 
 		```
 		$ curl -X GET --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" https://node-projectt.herokuapp.com/notes
 		```
-	* Modifier une note (patch method) depuis son ID (/notes/:id).
+	* Modifier une note (patch method) depuis son ID (/notes/:idNote).
 		```
-		$ curl -X PATCH --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" --data "{\"content\":\"Note content\"}" https://node-projectt.herokuapp.com/notes/(id_note)
+		$ curl -X PATCH --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" --data "{\"content\":\"Note content\"}" https://node-projectt.herokuapp.com/notes/:idNote
 		```
-	* Supprimer une note (delete method) depuis son ID (/notes/:id).
+	* Supprimer une note (delete method) depuis son ID (/notes/:idNote).
 		```
-		$ curl -X DELETE --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" https://node-projectt.herokuapp.com//notes/(id_note)
+		$ curl -X DELETE --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" https://node-projectt.herokuapp.com/notes/:idNote
 		```
 
 # Sources
