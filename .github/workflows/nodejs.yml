@@ -27,6 +27,8 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm install
+    - run: npm ava
+    - run: npm axios
     - run: npm test
       env:
         CI: true
