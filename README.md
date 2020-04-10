@@ -56,7 +56,7 @@ Pour chaque route citée un exemple de requête curl sera fournie. Nous partons 
 		$ curl -X DELETE --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" https://node-projectt.herokuapp.com/notes/:idNote
 		```
 
-# Pour lancer les tests (local) :
+# Pour lancer les tests :
 ```
 $ npm test
 ```
