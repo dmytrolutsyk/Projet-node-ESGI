@@ -30,7 +30,7 @@ module.exports = ({ test }) => {
     const MONGODB_URI = await MongoDBServer.getConnectionString();
 
     // Connecting to in-memory MongoDB server
-    dbClient = new MongoClient("mongodb+srv://root:root@cluster0-0vedk.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true });
+    dbClient = new MongoClient(MONGODB_URI, { useNewUrlParser: true });
     await dbClient.connect();
   });
 
