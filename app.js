@@ -4,8 +4,7 @@ const jwt = require('jsonwebtoken');
 const MongoClient = require('mongodb').MongoClient;
 const { ObjectId } = require('mongodb').ObjectId;
 const assert = require('assert');
-const client = new MongoClient("mongodb+srv://root:root@cluster0-0vedk.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true });
-var db;
+
 const app = express();
 const url = process.env.MONGODB_URI || 'mongodb://localhost:' + 27017 + '/notes';
 const dbName = "notes";
@@ -55,19 +54,9 @@ function isUsernameValid(str){
     return true;
 } 
 
-
-(async function() {
-    try {
-       var connected = await client.connect();
-       db = connected.db('notes-api');
-    } catch (err) { console.log(err.stack); }
-    })();
-
-    
-
-    app.listen(3000, function () {
-        console.log('Example app listening on port ', 3000)
-    })
+function initApiEndpoints({ attachTo: app, db }) {
+  assert('get' in (app || {}), 'attachTo parameter should be an express Router');
+  assert('collection' in (db || {}), 'db parameter should be a MongoDB connection');
 
   app.use(express.json());
 
@@ -302,3 +291,6 @@ app.post('/signin', async function(req, res){
         }
     });
 
+}
+
+module.exports = initApiEndpoints;
