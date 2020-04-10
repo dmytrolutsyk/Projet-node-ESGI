@@ -22,17 +22,21 @@ router.post('/', async function(req, res){
     if (username == null || password == null /*|| passwordOk == null*/) {
         return res.status(400).json({'error': 'missing parameters'});
     }else if(password.length <= 3) {
-        return res.status(400).json({'error': 'Le mot de passe doit contenir au moins 4 caractères'});
+        return res.status(400).json({'error': 'Le mot de passe doit contenir au moins 4 caractères', 
+        'token': 'undefined'});
     }else if(username.length <= 2 || username.length >= 21 ) {
-        return res.status(400).json({'error': 'Votre identifiant doit contenir entre 2 et 20 caractères'});
+        return res.status(400).json({'error': 'Votre identifiant doit contenir entre 2 et 20 caractères',
+        'token': 'undefined'});
     }else if(!isUsernameValid(username)) {
-        return res.status(400).json({'error': 'identifiant ne doit contenir que des lettres minuscules non accentuées'});
+        return res.status(400).json({'error': 'Votre identifiant ne doit contenir que des lettres minuscules non accentuées',
+        'token': 'undefined'});
     }
     
     let data = await col.find({}).toArray();
     console.log(data)
     if (data.some(data => data.username === req.body.username)) {
-        return res.status(400).json({ 'error': 'Cet identifiant est déjà associé à un compte'});
+        return res.status(400).json({ 'error': 'Cet identifiant est déjà associé à un compte',
+        'token': 'undefined'});
     } else {
         bcrypt.hash(password, 5, function(err, bcryptedpassword){
             let user = {
@@ -47,7 +51,7 @@ router.post('/', async function(req, res){
                     //resolve({ data: { createdId: result.insertedId }, statusCode: 201 });
                     user._id = result.insertedId;
                     console.log(user._id);
-                    return res.status(201).json({ 'createdId': result.insertedId,
+                    return res.status(200).json({ 'createdId': result.insertedId, 'error': null, 
                     'token': jwtUtils.generateTokenForUser(user)  })
                 }
             });
