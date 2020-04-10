@@ -4,7 +4,9 @@ const jwt = require('jsonwebtoken');
 const MongoClient = require('mongodb').MongoClient;
 const { ObjectId } = require('mongodb').ObjectId;
 const assert = require('assert');
-const client = new MongoClient("mongodb+srv://root:root@cluster0-0vedk.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true });
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://root:root@cluster0-0vedk.mongodb.net/test?retryWrites=true&w=majority";
+const PORT = process.env.PORT || 3000;
+const client = new MongoClient( MONGODB_URI, { useNewUrlParser: true });
 var db;
 const app = express();
 const url = process.env.MONGODB_URI || 'mongodb://localhost:' + 27017 + '/notes';
@@ -65,8 +67,8 @@ function isUsernameValid(str){
 
     
 
-    app.listen(3000, function () {
-        console.log('Example app listening on port ', 3000)
+    app.listen(PORT, function () {
+        console.log('Example app listening on port ', PORT)
     })
 
   app.use(express.json());
@@ -84,7 +86,7 @@ function isUsernameValid(str){
     if (password == null /*|| passwordOk == null*/) {
         return res.status(400).json({'error': 'Le mot de passe doit contenir au moins 4 caractères', 'token': undefined});
     } else if (!username) {
-    	return res.status(400).json({'error': 'Votre identifiant doit contenir entre 2 et 20 caractères', 'token': undefined});
+        return res.status(400).json({'error': 'Votre identifiant doit contenir entre 2 et 20 caractères', 'token': undefined});
     }else if(password.length <= 3) {
         return res.status(400).json({'error': 'Le mot de passe doit contenir au moins 4 caractères', 
         'token': undefined});
@@ -199,8 +201,8 @@ app.patch('/notes/:id', async function(req, res) {
                     return;
                 }
                 if (note.userID.toString() !== user._id.toString()) {
-				    res.status(403).json({ error: "Accès non autorisé à cette note" });
-				  } else {
+                    res.status(403).json({ error: "Accès non autorisé à cette note" });
+                  } else {
                     await col.updateOne(
                         {_id: ObjectId(req.params.id)},
                         {$set: {content: req.body.content, lastUpdatedAt: lastUpdatedAt}}
@@ -268,7 +270,7 @@ app.post('/signin', async function(req, res){
     if (password == null){
         return res.status(400).json({'error': 'Le mot de passe doit contenir au moins 4 caractères', 'token': undefined});
     } else if(!username){
-    	return res.status(400).json({'error': 'Votre identifiant doit contenir entre 2 et 20 caractères', 'token': undefined});
+        return res.status(400).json({'error': 'Votre identifiant doit contenir entre 2 et 20 caractères', 'token': undefined});
     }else if(password.length <= 3) {
         return res.status(400).json({'error': 'Le mot de passe doit contenir au moins 4 caractères'});
     }else if(username.length <= 2 || username.length >= 21 ) {
@@ -289,7 +291,7 @@ app.post('/signin', async function(req, res){
         bcrypt.compare(password, user.password, function(errBycrypt, resBycrypt) {
             if (resBycrypt) {
                 return res.status(200).json({
-                	'error': null,
+                    'error': null,
                     'UserId': user._id,
                     'token': generateTokenForUser(user)
                 });
