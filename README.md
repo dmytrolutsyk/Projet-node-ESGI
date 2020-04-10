@@ -1,7 +1,6 @@
 # Informations
 
 Le serveur écoute sur le port 3000. Vous pouvez changer le port en modifiant la constante PORT.
-Pour déployer sur Heroku et modifier son port, il faut modifier la variable d'environnement PORT.
 
 # Prérequis
 
@@ -56,6 +55,11 @@ Pour chaque route citée un exemple de requête curl sera fournie. Nous partons 
 		```
 		$ curl -X DELETE --header "Content-Type: application/json" -H "Authorization: YOUR_TOKEN" https://node-projectt.herokuapp.com/notes/:idNote
 		```
+
+# Pour lancer les tests (local) :
+```
+$ npm test
+```
 
 # Sources
 
